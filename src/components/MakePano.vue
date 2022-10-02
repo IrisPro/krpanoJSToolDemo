@@ -42,7 +42,7 @@
 
 <script setup lang="ts">
 import {Upload} from '@element-plus/icons-vue'
-import {ref, reactive, getCurrentInstance, onMounted} from 'vue'
+import {ref, reactive, getCurrentInstance, onMounted, computed} from 'vue'
 import {ElLoading, ElMessage} from 'element-plus'
 
 import KrpanoToolJS from '@krpano/js-tools'
@@ -69,17 +69,17 @@ const panoInput = ref<null | HTMLElement>(null)
 const sideBtns = reactive([
   {
     href: 'https://github.com/IrisPro/KrpanoToolJS',
-    imageUrl: '/src/assets/github.jpeg',
+    imageUrl: new URL(`../assets/github.jpeg`, import.meta.url).href,
     alt: 'github',
   },
   {
     href: 'https://www.npmjs.com/package/@krpano/js-tools',
-    imageUrl: '/src/assets/npm.jpg',
+    imageUrl: new URL(`../assets/npm.jpg`, import.meta.url).href,
     alt: 'npm',
   },
   {
     href: 'https://www.zhihu.com/people/iris-87-70/posts',
-    imageUrl: '/src/assets/blog.jpeg',
+    imageUrl: new URL(`../assets/blog.jpeg`, import.meta.url).href,
     alt: '知乎',
   },
 ])
@@ -149,7 +149,7 @@ async function packageVtour(reslut) {
 
   folder.file('tour.xml', packageTourXml(reslut.code.scene))
   await folder.folder('panos').loadAsync(reslut.content)
-  await folder.loadAsync(urlToBinaryContent('/src/assets/krpanoTemplate/files.zip'))
+  await folder.loadAsync(urlToBinaryContent(new URL(`../assets/krpanoTemplate/files.zip`, import.meta.url).href))
 
   zip
       .generateAsync({
@@ -171,7 +171,7 @@ function reset() {
 async function downloadTestImage() {
   const zip = new JSZip()
   const folder = zip.folder('测试全景图')
-  await folder.loadAsync(urlToBinaryContent('/src/assets/testImage/files.zip'))
+  await folder.loadAsync(urlToBinaryContent(new URL(`../assets/testImage/files.zip`, import.meta.url).href))
 
   zip
       .generateAsync({
