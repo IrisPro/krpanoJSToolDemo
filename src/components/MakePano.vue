@@ -78,7 +78,7 @@ const sideBtns = reactive([
     alt: 'npm',
   },
   {
-    href: 'https://www.zhihu.com/people/iris-87-70/posts',
+    href: 'https://blog.csdn.net/liuqinrui520/article/details/127153737',
     imageUrl: new URL(`../assets/blog.jpeg`, import.meta.url).href,
     alt: '知乎',
   },
