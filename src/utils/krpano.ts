@@ -1,5 +1,5 @@
 
-export function packageTourXml(scene) {
+export function packageTourXml(scene: string) {
     return `
             <krpano version="1.20.9" title="你的漫游">
             

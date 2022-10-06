@@ -105,10 +105,10 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@krpano/js-tools@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.npmjs.org/@krpano/js-tools/-/js-tools-1.1.0.tgz"
-  integrity sha512-H+yePSoeUQoThJM54Rh1kjG+9dR+JRIODq5jmmXUNh5HTpWsgnvjDoYrFUP9zae78yg+qyGRSNiVOtwwm/8VhA==
+"@krpano/js-tools@^1.1.4":
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/@krpano/js-tools/-/js-tools-1.1.4.tgz#0004abc2edef0530665947e68c5a7587d8a256d2"
+  integrity sha512-7RFNOAwWW/SqDX4TZPa1TAxGml1bqNuELYOK0cRe4YYhdjuJZXfYHeo4nrc7LHdjTikoY+opmyqv9p6NKI6ymA==
   dependencies:
     file-saver "^2.0.5"
     jszip "^3.10.0"

@@ -7,9 +7,9 @@
     </section>
     <section>
       <el-radio-group v-model="makeType" @change="onChangeMakeType">
-        <el-radio :label="EMakeType.cube">普通切图（立方体）</el-radio>
-        <el-radio :label="EMakeType.tiles">高清切图（多分辨率）</el-radio>
-        <el-radio :label="EMakeType.all">高清&普通</el-radio>
+        <el-radio :label="ESplitImageType.cube">普通切图（立方体）</el-radio>
+        <el-radio :label="ESplitImageType.tiles">高清切图（多分辨率）</el-radio>
+        <el-radio :label="ESplitImageType.all">高清&普通</el-radio>
       </el-radio-group>
     </section>
     <section>
@@ -46,18 +46,15 @@ import {ref, reactive, getCurrentInstance, onMounted, computed} from 'vue'
 import {ElLoading, ElMessage} from 'element-plus'
 
 import KrpanoToolJS from '@krpano/js-tools'
+import {IConvertPanoResult, ESplitImageType} from '@krpano/js-tools'
+
 import FileSaver from 'file-saver'
 import JSZip from 'jszip'
 import { urlToBinaryContent} from '../utils/utils'
 import {packageTourXml} from '../utils/krpano'
 
-enum EMakeType {
-  cube = 'cube',
-  tiles = 'tiles',
-  all = 'all',
-}
 
-const makeType = ref(EMakeType.cube)
+const makeType = ref(ESplitImageType.cube)
 const imageUrl = ref('')
 const instance = getCurrentInstance()
 const inputFile = ref()
@@ -65,6 +62,7 @@ const resultTips = ref('')
 const hasError = ref<Boolean>(false)
 const visibleSideBtn = ref<Boolean>(false)
 const panoInput = ref<null | HTMLElement>(null)
+const isDownloading = ref<Boolean>(false)
 
 const sideBtns = reactive([
   {
@@ -78,20 +76,20 @@ const sideBtns = reactive([
     alt: 'npm',
   },
   {
-    href: 'https://blog.csdn.net/liuqinrui520/article/details/127153737',
-    imageUrl: new URL(`../assets/blog.jpeg`, import.meta.url).href,
-    alt: '知乎',
+    href: 'https://juejin.cn/post/7150895121444110344',
+    imageUrl: new URL(`../assets/juejin.jpeg`, import.meta.url).href,
+    alt: '掘金',
   },
 ])
 
 onMounted(() => {
   setTimeout(() => {
     visibleSideBtn.value = true
-  }, 3000)
+  }, 2000)
 })
 
 function selectImage() {
-  panoInput.value.click()
+  panoInput.value?.click()
 }
 
 function onChangeMakeType() {
@@ -116,39 +114,39 @@ function makePano() {
     background: 'rgba(0, 0, 0, 0.7)'
   })
   let makeFunc
-  if (makeType.value === EMakeType.cube) {
+  if (makeType.value === ESplitImageType.cube) {
     makeFunc = 'makeCube'
-  } else if (makeType.value === EMakeType.tiles) {
+  } else if (makeType.value === ESplitImageType.tiles) {
     makeFunc = 'makeTiles'
   } else {
     makeFunc = 'makeCubeAndTiles'
   }
 
   const krpanoTool = new KrpanoToolJS()
-  krpanoTool[makeFunc](inputFile.value).then(reslut => {
+  krpanoTool[makeFunc](inputFile.value).then((reslut: IConvertPanoResult) => {
     packageVtour(reslut)
     hasError.value = false
     loading.close()
-  }).catch(e => {
+  }).catch((error: string) => {
     ElMessage({
       showClose: true,
-      message: e || '出错了，刷新重试',
+      message: error || '出错了，刷新重试',
       type: 'error',
       duration: 0
     })
     hasError.value = true
-    resultTips.value = `出错了，${e || '请刷新重试'}`
+    resultTips.value = `出错了，${error || '请刷新重试'}`
     loading.close()
     reset()
   })
 }
 
-async function packageVtour(reslut) {
+async function packageVtour(reslut: IConvertPanoResult) {
   const zip = new JSZip()
-  const folder = zip.folder('场景_' + reslut.dirName.replace('.tiles', ''))
+  const folder = zip.folder('场景_' + reslut.dirName.replace('.tiles', '')) as JSZip
 
   folder.file('tour.xml', packageTourXml(reslut.code.scene))
-  await folder.folder('panos').loadAsync(reslut.content)
+  await folder.folder('panos')?.loadAsync(reslut.content as Blob)
   await folder.loadAsync(urlToBinaryContent(new URL(`../assets/krpanoTemplate/files.zip`, import.meta.url).href))
 
   zip
@@ -165,12 +163,15 @@ function reset() {
   imageUrl.value = ''
   resultTips.value = ''
   hasError.value = false
-  makeType.value = EMakeType.cube
+  makeType.value = ESplitImageType.cube
 }
 
 async function downloadTestImage() {
+  if (isDownloading.value) return
+  isDownloading.value = true
+
   const zip = new JSZip()
-  const folder = zip.folder('测试全景图')
+  const folder = zip.folder('测试全景图') as JSZip
   await folder.loadAsync(urlToBinaryContent(new URL(`../assets/testImage/files.zip`, import.meta.url).href))
 
   zip
@@ -184,6 +185,7 @@ async function downloadTestImage() {
           message: '开始下载测试全景图',
           type: 'success'
         })
+        isDownloading.value = false
       })
 }
 
@@ -264,6 +266,10 @@ async function downloadTestImage() {
     .download-test-file {
       color: #409eff;
       cursor: pointer;
+      &:hover {
+        color: #006fff;
+        text-decoration: underline;
+      }
     }
   }
 

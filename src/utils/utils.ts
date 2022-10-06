@@ -1,8 +1,8 @@
 import JSZipUtils from 'jszip-utils'
 
-export function urlToBinaryContent(url): Promise<any> {
+export function urlToBinaryContent(url: string): Promise<any> {
     return new Promise(function (resolve, reject) {
-        JSZipUtils.getBinaryContent(url, function (err, data) {
+        JSZipUtils.getBinaryContent(url, function (err: any, data: any) {
             if (err) {
                 reject(err)
             } else {
