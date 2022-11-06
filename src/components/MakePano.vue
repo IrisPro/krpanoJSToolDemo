@@ -46,12 +46,31 @@ import {ref, reactive, getCurrentInstance, onMounted, computed} from 'vue'
 import {ElLoading, ElMessage} from 'element-plus'
 
 import KrpanoToolJS from '@krpano/js-tools'
-import {IConvertPanoResult, ESplitImageType} from '@krpano/js-tools'
 
 import FileSaver from 'file-saver'
 import JSZip from 'jszip'
 import { urlToBinaryContent} from '../utils/utils'
 import {packageTourXml} from '../utils/krpano'
+
+enum ESplitImageType {
+  cube = "cube",
+  tiles = "tiles",
+  all = "all"
+}
+/**
+ * 切图返回的结果
+ */
+interface IConvertPanoResult {
+  dirName: string;
+  content: Blob | null;
+  duration: string | number;
+  code: {
+    scene: string;
+    cubeImage: string;
+    tileImage?: string;
+    shortTileImage?: string;
+  };
+}
 
 
 const makeType = ref(ESplitImageType.cube)
