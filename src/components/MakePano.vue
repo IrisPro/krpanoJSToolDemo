@@ -102,7 +102,7 @@ const sideBtns = reactive([
 ])
 
 onMounted(() => {
-  console.log('version - 1.1.11')
+  console.log('version - 1.1.13')
   setTimeout(() => {
     visibleSideBtn.value = true
   }, 2000)
