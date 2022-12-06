@@ -102,7 +102,7 @@ const sideBtns = reactive([
 ])
 
 onMounted(() => {
-  console.log('version - 1.1.13')
+  console.log('version - 1.1.14')
   setTimeout(() => {
     visibleSideBtn.value = true
   }, 2000)
@@ -147,15 +147,15 @@ function makePano() {
     packageVtour(reslut)
     hasError.value = false
     loading.close()
-  }).catch((error: string) => {
+  }).catch((error: any) => {
     ElMessage({
       showClose: true,
-      message: error || '出错了，刷新重试',
+      message: '出错了，内存不足，建议使用chrome浏览器',
       type: 'error',
-      duration: 0
+      duration: 4
     })
     hasError.value = true
-    resultTips.value = `出错了，${error || '请刷新重试'}`
+    resultTips.value = '出错了，内存不足，建议使用chrome浏览器'
     loading.close()
     reset()
   })
