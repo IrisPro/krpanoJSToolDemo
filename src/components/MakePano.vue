@@ -157,6 +157,7 @@ function makePano() {
     hasError.value = true
     resultTips.value = '出错了，内存不足，建议使用chrome浏览器'
     loading.close()
+    console.log('error', error)
     reset()
   })
 }
